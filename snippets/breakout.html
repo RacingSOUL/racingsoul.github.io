@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="EN">
+<head>
+	<meta charset="utf-8">
+	<meta author="Andrey Rekk" description="JS Breakout Game">
+	<title>Breakout game</title>
+	<style>
+		*	{
+			padding: 0;
+			margin: 0;
+		}
+		canvas {
+			background: #eee;
+			display: block;
+			margin: 0 auto;
+		}
+	</style>
+
+</head>
+
+<body>
+
+	<canvas id="canvas" width="480" height="320"></canvas>
+
+	<script>
+		// Targetting canvas element and setting its context into a variable ctx
+		var canvas = document.getElementById("canvas");
+		var ctx = canvas.getContext("2d");
+
+		// Preparing x, y coordinates and delta x,y for the ball and its movement
+		var x = canvas.width / 2;  // Ball spawns at (x = 240, y = 130) point a ball diameter above the bottom edge of the canvas
+		var y = canvas.height - 30;
+		var dx = 4;
+		var dy = -4;
+		var ballColor = "#0095DD"; // Starting ball color
+		var colorCodeArray = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F"]; // Array with possible string character for randomBallColor() function
+		var replacementBallColor;
+
+		// Defining a paddle to hit the ball
+		var paddleHeight = 10;
+		var paddleWidth = 75;
+		var paddleX = (canvas.width - paddleWidth) / 2;
+
+		// Button pressed (right/left) state defined with boolean values
+		var rightPressed = false;
+		var leftPressed = false;
+
+		// Saving ball radius in a separate variable for collision detection purpose
+		var ballRadius = 10;
+
+		// Brick variables
+		var brickRowCount = 3;
+		var brickColumnCount = 5;
+		var brickWidth = 75;
+		var brickHeight = 20;
+		var brickPadding = 10;
+		var brickOffsetTop = 30;
+		var brickOffsetLeft = 30;
+
+		// Setting up score
+		var score = 0;
+
+		// Setting up lives
+		var lives = 3;
+
+		// Two-dimensional array
+		var bricks = [];
+		for (var c = 0; c < brickColumnCount; c++) {
+			bricks[c] = [];
+			for (var r = 0; r < brickRowCount; r++) {
+				bricks[c][r] = { x: 0, y: 0, status: 1};
+			}
+		}
+
+		// Function to draw the ball (one frame)
+		function drawBall () {
+			ctx.beginPath(); // beginPath() is required else the ball will leave the streak across the screen (not sure why yet)
+			ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
+			ctx.fillStyle = ballColor;
+			ctx.fill();
+			ctx.closePath(); // closePath() is not required
+		}
+
+		// Function to draw the paddle (one frame)
+		function drawPaddle () {
+			ctx.beginPath();
+			ctx.fillStyle = "#4682B4";
+			ctx.fillRect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
+			ctx.closePath();
+		}
+
+		function drawBricks () {
+			for (var c = 0; c < brickColumnCount; c++) {
+				for (var r = 0; r < brickRowCount; r++) {
+					if (bricks[c][r].status == 1) {
+						var brickX = (c * (brickWidth + brickPadding)) + brickOffsetLeft;
+						var brickY = (r * (brickHeight + brickPadding)) + brickOffsetTop;
+						bricks[c][r].x = brickX;
+						bricks[c][r].y = brickY;
+						ctx.beginPath();
+						ctx.fillStyle = "#0095DD";
+						ctx.fillRect(brickX, brickY, brickWidth, brickHeight);
+						ctx.closePath();
+					}
+				}
+			}
+		}
+
+		// Setting up a new replacementBallColor after each bounce
+		function randomBallColor () {
+			replacementBallColor = "#";
+			for (var i = 1; i < ballColor.length; i++) {
+				var letter = colorCodeArray[Math.floor(Math.random() * colorCodeArray.length)];
+				replacementBallColor += letter;
+			}
+			return replacementBallColor;
+		}
+
+		// Drawing the whole game on canvas with all existing elements and updating ball's x, y with their respective delta values (for the next frame)
+		function draw() {
+
+			// Clearing the frame
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			drawBall();
+			drawBricks();
+			drawPaddle();
+			drawScore();
+			drawLives();
+			collisionDetection();
+
+			// Ball collision detection with top and bottom edges of canvas - reverses delta x component (vertical speed) to "bounce off of the wall"
+			if (x + dx > canvas.width-ballRadius || x + dx < ballRadius) {
+        		dx = -dx;
+        		ballColor = randomBallColor(); // If the ball bounces off, calling randomBallColor() function to return the random color and set ballColor to that color
+        	}
+
+        	// Ball collision detection with right and left edges of canvas - reverses delta y component (horizontal speed) to "bounce off of the wall"
+    		
+    		if(y + dy < ballRadius) {
+       			dy = -dy;
+       			ballColor = randomBallColor(); // If the ball bounces off, calling randomBallColor() function to return the random color and set ballColor to that color
+        	} else if (y + dy > canvas.height-ballRadius) {
+        		if (x > paddleX && x < paddleX + paddleWidth) {
+        			dy = -dy;
+        			ballColor = randomBallColor();
+        		} else {
+        			lives--;
+        			if (!lives) {
+        				alert("GAME OVER");
+        				document.location.reload();
+        			} else {
+        				x = canvas.width / 2;
+        				y = canvas.height - 30;
+        				dx = 4;
+        				dy = -4;
+        				paddleX = (canvas.width - paddleWidth) / 2;
+        			}
+        		}
+        	}
+
+    		// Updating next frame's ball x, y center coordinates (creating illusion of movement)
+			x += dx;
+			y += dy;
+
+			if (rightPressed) {
+				paddleX += 7;
+				if (paddleX + paddleWidth > canvas.width) {
+					paddleX = canvas.width - paddleWidth;
+				}
+			} else if (leftPressed) {
+				paddleX -= 7;
+				if (paddleX < 0) {
+					paddleX = 0;
+				}
+			}
+			requestAnimationFrame(draw); // Creating animation by looping draw() at 60 FPS
+		}
+
+		document.addEventListener("keydown", keyDownHandler, false);
+		document.addEventListener("keyup", keyUpHandler, false);
+		document.addEventListener("mousemove", mouseMoveHandler, false);
+
+		function mouseMoveHandler (event) {
+			var relativeX = event.clientX - canvas.offsetLeft;
+			if (relativeX > 0 && relativeX < canvas.width) {
+				paddleX = relativeX - paddleWidth / 2;
+				if (paddleX + paddleWidth > canvas.width){
+					paddleX = canvas.width - paddleWidth;
+				}
+				if (paddleX < 0) {
+					paddleX = 0;
+				}
+			}
+		}
+
+		function keyDownHandler (event) {
+			if (event.key == "Right" || event.key == "ArrowRight") {
+				rightPressed = true;
+			} else if (event.key == "Left" || event.key == "ArrowLeft") {
+				leftPressed = true;
+			}
+		}
+
+		function keyUpHandler (event) {
+			if (event.key == "Right" || event.key == "ArrowRight") {
+				rightPressed = false;
+			} else if (event.key == "Left" || event.key == "ArrowLeft") {
+				leftPressed = false;
+			}
+		}
+
+		// Collision detection with separate blocks
+		function collisionDetection() {
+			for (var c = 0; c < brickColumnCount; c++) {
+				for (var r = 0; r < brickRowCount; r++) {
+					var b = bricks[c][r];
+					if (b.status == 1) {
+						if (x > b.x && x < b.x + brickWidth && y > b.y && y < b.y + brickHeight) {
+							dy = -dy;
+							b.status = 0;
+							ballColor = randomBallColor();
+							score++;
+							if (score == brickRowCount * brickColumnCount) {
+								alert("YOU WON! YOUR SCORE IS: " + score + " POINTS");
+								document.location.reload();
+							}
+						}	
+					}
+				}
+			}
+		}
+
+		function drawScore () {
+			ctx.font = "16px Arial";
+			ctx.fillStyle = "#778899";
+			ctx.fillText("Score: " + score, 8, 20);
+		}
+
+		function drawLives () {
+			ctx.font = "16px Arial";
+			ctx.fillstyle = "#778899";
+			ctx.fillText("Lives: " + lives, canvas.width - 65, 20);
+		}
+
+		draw();
+	
+	</script>
+</body>
+</html>
