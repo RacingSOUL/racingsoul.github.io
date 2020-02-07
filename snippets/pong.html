@@ -3,17 +3,39 @@
 	<head>
 		<meta charset="utf-8">
 		<link href="../styles/pong-style.css "rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=Bangers&display=swap" rel="stylesheet">
 		<title>PONG</title>
 	</head>
 
 	<body>
-		<h1>Ping Pong</h1>
-		<canvas id="canvas" width="600" height="400"></canvas>
+		<div class="grid-container">
+			<div class="header">
+				<h2>Ping Pong</h2>
+			</div>
+
+			<div class="left">
+				<span id="left-span">
+					<h3 class="text-right">Player 1 Controls:</h3>
+					<h3 class="text-right">W / S = up / down for P1</h3>
+				</span>
+			</div>
+			
+				<canvas class="middle" id="canvas" width="600" height="400"></canvas>		
+						
+			<div class="right">
+				<span id="right-span">
+					<h3 class="text-left">Player 2 Controls:</h3>
+					<h3 class="text-left">W / S = up / down for P1</h3>
+				</span>	
+			</div>
+
+			<div class="footer">
+				<h3>SPACE = serve the ball (only after scoring a point)</h3>
+				<h3>ENTER = reset (anytime)</h3>
+			</div>
+		</div>
+		
 		<script src="https://code.jquery.com/jquery-2.1.0.js"></script>
 		<script src="../scripts/pong.js"></script>
-		<h3>W / S = up / down for P1</h3>
-		<h3>Arrow UP / Arrow DOWN = up / down for P2</h3>
-		<h3>SPACE = serve the ball (only after scoring a point)</h2>
-		<h3>ENTER = reset (anytime)</h2>
 	</body>
 </html>
