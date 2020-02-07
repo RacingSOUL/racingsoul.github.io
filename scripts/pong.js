@@ -20,9 +20,9 @@ var scorePlayerOne = 0;
 var scorePlayerTwo = 0;
 var maxScore = 10;
 
-// Conditions needed for serving and win/lose state (both true for serve to be functional)
+// Conditions needed for serving and win/lose state (var serving should be "true" to enable serving ability)
 var playing = true;
-var serving = true;
+var serving = false;
 
 // Controls for P1/P2 and serve/reset
 var controls = {
@@ -58,7 +58,7 @@ var drawScore = function () {
 // Function to allow reseting the game whenever players want
 var reset = function () {
 	playing = true;
-	serving = true;
+	serving = false;
 	scorePlayerOne = 0;
 	scorePlayerTwo = 0;
 	ball.x = width / 2;
@@ -136,7 +136,7 @@ Ball.prototype.point = function () {
 			score(2);
 		}
 		clearInterval(intervalId);
-		serving = false;
+		serving = true;
 	} else if (this.x > width) {
 		scorePlayerOne++;
 		if (scorePlayerOne === maxScore) {
@@ -145,7 +145,7 @@ Ball.prototype.point = function () {
 			score(1);
 		}
 		clearInterval(intervalId);
-		serving = false;
+		serving = true;
 	}
 };
 
@@ -210,8 +210,8 @@ var twoMoveDown = false;
 // Event handler for serving the ball and reseting the match
 $("body").keydown(function (event) {
 	var pressedControls = controls[event.keyCode];
-	if (pressedControls !== undefined && pressedControls === "space" && !serving && playing) {
-		serving = true;
+	if (pressedControls !== undefined && pressedControls === "space" && serving && playing) {
+		serving = false;
 		ball.x = width / 2;
 		ball.y = height / 2;
 		ball.dx = -ball.dx;
@@ -236,11 +236,11 @@ $("body").keydown(function (event) {
 
 // Event handler for listening keyup events for player one
 $("body").keyup(function (event) {
-	var unpressedControlsOne = controls[event.keyCode];
-	if (unpressedControlsOne !== undefined && oneMoveUp && unpressedControlsOne === "w") {
+	var depressedControlsOne = controls[event.keyCode];
+	if (depressedControlsOne !== undefined && oneMoveUp && depressedControlsOne === "w") {
 		oneMoveUp = false;
 	}
-	if (unpressedControlsOne !== undefined && oneMoveDown && unpressedControlsOne === "s") {
+	if (depressedControlsOne !== undefined && oneMoveDown && depressedControlsOne === "s") {
 		oneMoveDown = false;
 	}
 });
@@ -258,11 +258,11 @@ $("body").keydown(function (event) {
 
 // Event handler for listening keyup events for player two
 $("body").keyup(function (event) {
-	var unpressedControlsTwo = controls[event.keyCode];
-	if (unpressedControlsTwo !== undefined && twoMoveUp && unpressedControlsTwo === "arrowUp") {
+	var depressedControlsTwo = controls[event.keyCode];
+	if (depressedControlsTwo !== undefined && twoMoveUp && depressedControlsTwo === "arrowUp") {
 		twoMoveUp = false;
 	}
-	if (unpressedControlsTwo !== undefined && twoMoveDown && unpressedControlsTwo === "arrowDown") {
+	if (depressedControlsTwo !== undefined && twoMoveDown && depressedControlsTwo === "arrowDown") {
 		twoMoveDown = false;
 	}
 });
