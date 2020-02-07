@@ -37,6 +37,31 @@ var controls = {
 // Ball radius
 var radius = 10;
 
+// Function to draw playing field's lines
+var lines = function () {
+	ctx.strokeStyle = "White";
+	ctx.beginPath();
+	ctx.lineWidth = 6;
+	ctx.strokeRect(3, 3, width - 6, height - 6);
+	ctx.closePath();
+	ctx.lineWidth = 2;
+	ctx.beginPath();
+	ctx.moveTo(0, height / 2);
+	ctx.lineTo(width / 2 - 30, height / 2);
+	ctx.stroke();
+	ctx.closePath();
+	ctx.beginPath();
+	ctx.moveTo(width / 2 + 30, height / 2);
+	ctx.lineTo(width, height / 2);
+	ctx.stroke();
+	ctx.closePath();
+	ctx.beginPath();
+	ctx.moveTo(width / 2, 0);
+	ctx.lineTo(width / 2, height);
+	ctx.stroke();
+	ctx.closePath();
+}
+
 // Function for announcing when player scores
 var score = function (playerId) {
 	ctx.font = "60px Courier";
@@ -48,11 +73,11 @@ var score = function (playerId) {
 
 // Function for drawing score
 var drawScore = function () {
-	ctx.font = "160px Courier";
+	ctx.font = "40px Courier";
 	ctx.fillStyle = "OldLace";
 	ctx.textAlign = "center";
-	ctx.textBaseline = "middle";
-	ctx.fillText(scorePlayerOne + " | " + scorePlayerTwo, width / 2, height / 2);
+	ctx.textBaseline = "bottom";
+	ctx.fillText(scorePlayerOne + " | " + scorePlayerTwo, width / 2, height);
 };
 
 // Function to allow reseting the game whenever players want
@@ -84,8 +109,11 @@ var circle = function (x, y, radius, fillCircle) {
 	ctx.beginPath();
 	ctx.arc(x, y, radius, 0, Math.PI * 2, false);
 	if (fillCircle) {
+		ctx.fillStyle = "Darkorange";
 		ctx.fill();
 	} else {
+		ctx.lineWidth = 1;
+		ctx.strokeStyle = "Black";
 		ctx.stroke();
 	}
 	ctx.closePath();
@@ -101,9 +129,7 @@ var Ball = function () {
 
 // Ball method for drawing
 Ball.prototype.draw = function () {
-	ctx.fillStyle = "Darkorange";
 	circle(this.x, this.y, radius, true);
-	ctx.fillStyle = "Black";
 	circle(this.x, this.y, radius, false);
 };
 
@@ -270,6 +296,7 @@ $("body").keyup(function (event) {
 // Function with all game events
 function gameLoop () {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	lines();
 	racketOne.draw();
 	racketTwo.draw();
 	racketOne.move();
