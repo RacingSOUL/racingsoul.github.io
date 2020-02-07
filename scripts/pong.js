@@ -64,8 +64,8 @@ var lines = function () {
 
 // Function for announcing when player scores
 var score = function (playerId) {
-	ctx.font = "60px Courier";
-	ctx.fillStyle = "Black";
+	ctx.font = "50px Bangers";
+	ctx.fillStyle = "OldLace";
 	ctx.textAlign = "center";
 	ctx.textBaseline = "top";
 	ctx.fillText("Player " + playerId + " SCORES!", width / 2, 0);
@@ -73,7 +73,7 @@ var score = function (playerId) {
 
 // Function for drawing score
 var drawScore = function () {
-	ctx.font = "40px Courier";
+	ctx.font = "40px Bangers";
 	ctx.fillStyle = "OldLace";
 	ctx.textAlign = "center";
 	ctx.textBaseline = "bottom";
@@ -97,8 +97,8 @@ var reset = function () {
 // Function for checking if the match has finished or not
 var gameOver = function (playerId) {
 	playing = false;
-	ctx.font = "60px Courier";
-	ctx.fillStyle = "Black";
+	ctx.font = "50px Bangers";
+	ctx.fillStyle = "OldLace";
 	ctx.textAlign = "center";
 	ctx.textBaseline = "top";
 	ctx.fillText("PLAYER " + playerId + " WON!", width / 2, 0);
