@@ -109,11 +109,11 @@ var circle = function (x, y, radius, fillCircle) {
 	ctx.beginPath();
 	ctx.arc(x, y, radius, 0, Math.PI * 2, false);
 	if (fillCircle) {
-		ctx.fillStyle = "Darkorange";
+		ctx.fillStyle = "#e5771e";
 		ctx.fill();
 	} else {
 		ctx.lineWidth = 1;
-		ctx.strokeStyle = "Black";
+		ctx.strokeStyle = "#5a3d2b";
 		ctx.stroke();
 	}
 	ctx.closePath();
@@ -224,8 +224,8 @@ Racket.prototype.move = function () {
 
 // Creating ball and rackets objects
 var ball = new Ball();
-var racketOne = new Racket(0, "Blue");
-var racketTwo = new Racket(width - racketWidth, "Red");
+var racketOne = new Racket(0, "#007291");
+var racketTwo = new Racket(width - racketWidth, "#c21703");
 
 // Allowing two inputs at once for moving both rackets (sticky controls) by setting up move condtions
 var oneMoveUp = false;
