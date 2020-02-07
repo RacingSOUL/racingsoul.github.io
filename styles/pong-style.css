@@ -1,0 +1,26 @@
+body {
+	background-color: #A9A9A9;
+}
+
+h1 {
+	text-align: center;
+	margin: 0;
+	padding: 30px;
+	font-size: 40px;
+	color: blue;
+	text-shadow: 4px 2px 2px black;
+	background-color: gray;
+}
+
+h3 {
+	text-align: center;
+	background-color: #BDB76B;
+	margin: 0px;
+	padding: 5px;
+}
+
+canvas {
+	background-color: #D3D3D3;
+	display: block;
+	margin: 0 auto;
+}
