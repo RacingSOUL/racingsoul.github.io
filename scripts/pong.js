@@ -68,7 +68,7 @@ var score = function (playerId) {
 	ctx.fillStyle = "OldLace";
 	ctx.textAlign = "center";
 	ctx.textBaseline = "top";
-	ctx.fillText("Player " + playerId + " SCORES!", width / 2, 0);
+	ctx.fillText("Player " + playerId + " SCORES!", width / 2, 6);
 };
 
 // Function for drawing score
@@ -77,7 +77,7 @@ var drawScore = function () {
 	ctx.fillStyle = "OldLace";
 	ctx.textAlign = "center";
 	ctx.textBaseline = "bottom";
-	ctx.fillText(scorePlayerOne + " | " + scorePlayerTwo, width / 2, height);
+	ctx.fillText(scorePlayerOne + "   " + scorePlayerTwo, width / 2, height - 6);
 };
 
 // Function to allow reseting the game whenever players want
@@ -97,11 +97,11 @@ var reset = function () {
 // Function for checking if the match has finished or not
 var gameOver = function (playerId) {
 	playing = false;
-	ctx.font = "50px Bangers";
+	ctx.font = "80px Bangers";
 	ctx.fillStyle = "OldLace";
 	ctx.textAlign = "center";
 	ctx.textBaseline = "top";
-	ctx.fillText("PLAYER " + playerId + " WON!", width / 2, 0);
+	ctx.fillText("- PLAYER " + playerId + " WON! -", width / 2, 6);
 };
 
 // Function for drawing ball: inner circle and outline
